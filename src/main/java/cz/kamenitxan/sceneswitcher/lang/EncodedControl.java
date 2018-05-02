@@ -36,10 +36,11 @@ public class EncodedControl extends ResourceBundle.Control
 		final String resourceName = toResourceName(bundleName, "properties");
 		final ClassLoader classLoader = loader;
 		final boolean reloadFlag = reload;
-		InputStream stream = null;
+		InputStream stream;
 		try {
 			stream = AccessController.doPrivileged(
 					new PrivilegedExceptionAction<InputStream>() {
+						@Override
 						public InputStream run() throws IOException {
 							InputStream is = null;
 							if (reloadFlag) {

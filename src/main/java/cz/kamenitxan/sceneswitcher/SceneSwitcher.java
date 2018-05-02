@@ -1,8 +1,8 @@
 package cz.kamenitxan.sceneswitcher;
 
-import cz.kamenitxan.sceneswitcher.demo.Main;
 import javafx.fxml.FXMLLoader;
 import cz.kamenitxan.sceneswitcher.lang.EncodedControl;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
@@ -17,7 +17,6 @@ import java.util.*;
  * simple access from anywhere in the application.
  */
 public class SceneSwitcher {
-	private Class<?> mainClass;
 	private static SceneSwitcher singleton = new SceneSwitcher();
 	private SceneSwitcher() {}
 	public static SceneSwitcher getInstance() {
@@ -38,12 +37,9 @@ public class SceneSwitcher {
 
 	/**
 	 * Creates the main application scene.
-	 * @param mainClass class used as relative root for finding scenes. Default path is "mainClass/gui/scenes/.
-	 *                  If you need to change this, overide loadScene().
 	 * @return the created scene.
 	 */
-	public Scene createMainScene(Class<?> mainClass) throws IOException {
-		this.mainClass = mainClass;
+	public Scene createMainScene() throws IOException {
 		return new Scene(loadMainPane());
 	}
 
@@ -63,7 +59,7 @@ public class SceneSwitcher {
 		FXMLLoader loader = new FXMLLoader();
 
 		Pane mainPane = loader.load(
-				SceneSwitcher.class.getResourceAsStream(MAIN)
+				this.getClass().getClassLoader().getResourceAsStream(MAIN)
 		);
 
 		mainController = loader.getController();
@@ -101,8 +97,8 @@ public class SceneSwitcher {
 	public void loadScene(String scene, String language) {
 		lastFxml = scene;
 		try {
-				URL url = mainClass.getResource("gui/scenes/" + getScene(scene));
-				mainController.setScene(FXMLLoader.load(url, getLocalization(language)));
+				URL url = this.getClass().getClassLoader().getResource( getScene(scene));
+				mainController.setScene((Node) FXMLLoader.load(url, getLocalization(language)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -121,7 +117,7 @@ public class SceneSwitcher {
 		} else {
 			Locale locale = new Locale(language);
 
-			return ResourceBundle.getBundle(Main.class.getPackage().getName() + ".gui.lang.strings",
+			return ResourceBundle.getBundle( "strings",
 											locale,
 											new EncodedControl("UTF8")
 			);

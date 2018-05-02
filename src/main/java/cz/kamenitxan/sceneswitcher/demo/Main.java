@@ -16,7 +16,7 @@ public class Main extends Application {
         sceneSwitcher.addScene("b", "b.fxml");
 
         stage.setTitle("Vista Viewer");
-        stage.setScene(sceneSwitcher.createMainScene(this.getClass()));
+        stage.setScene(sceneSwitcher.createMainScene());
 
 
         sceneSwitcher.loadScene("a");
